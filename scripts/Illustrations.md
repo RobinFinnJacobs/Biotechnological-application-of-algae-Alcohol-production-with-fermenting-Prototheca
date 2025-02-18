@@ -391,7 +391,9 @@ print(plot)
 ## 03 Plot Sugar concentration with standard deviation
 ```r
 # Load libraries
-library(ggplot2); library(dplyr); library(tidyr)
+library(ggplot2)
+library(dplyr)
+library(tidyr)
 
 # Import data
 data <- read.csv("~/Desktop/Zuckerkonz_sd_neu.csv", sep = ";", dec = ",")
@@ -399,25 +401,49 @@ data <- read.csv("~/Desktop/Zuckerkonz_sd_neu.csv", sep = ";", dec = ",")
 # Reshape data (long format for concentration & standard deviation)
 data_long <- data %>% pivot_longer(cols = starts_with("Konz"), names_to = "Sugar", values_to = "Concentration")
 sd_long <- data %>% pivot_longer(cols = starts_with("sd_"), names_to = "SD_Type", values_to = "SD") %>%
-  mutate(SD_Type = recode(SD_Type, "sd_Glucose" = "Konz_Glucose_g.l", "sd_Saccharose" = "Konz_Saccharose_g.l", "sd_Maltose" = "Konz_Maltose_g.l"))
+  mutate(SD_Type = case_when(
+    SD_Type == "sd_Glucose" ~ "Konz_Glucose_g.l",
+    SD_Type == "sd_Saccharose" ~ "Konz_Saccharose_g.l",
+    SD_Type == "sd_Maltose" ~ "Konz_Maltose_g.l",
+    TRUE ~ SD_Type  # Falls andere Werte vorhanden sind
+  ))
 
 # Merge concentration & SD, replace NA with 0
-data_long <- data_long %>% left_join(sd_long, by = c("Ansatz", "Sugar" = "SD_Type")) %>%
-  mutate(SD = replace_na(SD, 0), Sugar = recode(Sugar, "Konz_Glucose_g.l" = "Glucose", 
-         "Konz_Saccharose_g.l" = "Saccharose", "Konz_Maltose_g.l" = "Maltose"))
+data_long <- data_long %>% 
+  left_join(sd_long, by = c("Ansatz", "Sugar" = "SD_Type")) %>%
+  mutate(SD = replace_na(SD, 0), 
+         Sugar = case_when(
+           Sugar == "Konz_Glucose_g.l" ~ "Glucose",
+           Sugar == "Konz_Saccharose_g.l" ~ "Saccharose",
+           Sugar == "Konz_Maltose_g.l" ~ "Maltose",
+           TRUE ~ Sugar  # Falls andere Werte vorhanden sind
+         ))
 
 # Define fermentation stages & approaches
-data_long <- data_long %>% mutate(Group = case_when(
-  Ansatz %in% c("1.1", "3.1", "5.1", "6.1", "9.1", "10.1") ~ "before fermentation",
-  Ansatz %in% c("1.2", "3.2", "5.2", "6.2", "10.2") ~ "after fermentation (Mean)",
-  Ansatz == "9.2" ~ "after fermentation"),
-  Approach = recode(Ansatz, "1.1" = "Approach 1", "1.2" = "Approach 1", "3.1" = "Approach 3", "3.2" = "Approach 3",
-                    "5.1" = "Approach 5", "5.2" = "Approach 5", "6.1" = "Approach 6", "6.2" = "Approach 6",
-                    "9.1" = "Approach 7", "9.2" = "Approach 7", "10.1" = "Approach 8", "10.2" = "Approach 8"))
+data_long <- data_long %>%
+  mutate(
+    Group = case_when(
+      Ansatz %in% c("1.1", "3.1", "5.1", "6.1", "9.1", "10.1") ~ "before fermentation",
+      Ansatz %in% c("1.2", "3.2", "5.2", "6.2", "10.2") ~ "after fermentation (Mean)",
+      Ansatz == "9.2" ~ "after fermentation",
+      TRUE ~ NA_character_  # Falls keine Übereinstimmung gefunden wird
+    ),
+    Approach = case_when(
+      Ansatz %in% c("1.1", "1.2") ~ "Approach 1",
+      Ansatz %in% c("3.1", "3.2") ~ "Approach 3",
+      Ansatz %in% c("5.1", "5.2") ~ "Approach 5",
+      Ansatz %in% c("6.1", "6.2") ~ "Approach 6",
+      Ansatz %in% c("9.1", "9.2") ~ "Approach 7",
+      Ansatz %in% c("10.1", "10.2") ~ "Approach 8",
+      TRUE ~ NA_character_  # Falls keine Übereinstimmung gefunden wird
+    )
+  )
 
 # Factor levels for ordering
-data_long$Approach <- factor(data_long$Approach, levels = c("Approach 1", "Approach 3", "Approach 5", "Approach 6", "Approach 7", "Approach 8"))
-data_long$Group <- factor(data_long$Group, levels = c("before fermentation", "after fermentation (Mean)", "after fermentation"))
+data_long$Approach <- factor(data_long$Approach, 
+                             levels = c("Approach 1", "Approach 3", "Approach 5", "Approach 6", "Approach 7", "Approach 8"))
+data_long$Group <- factor(data_long$Group, 
+                          levels = c("before fermentation", "after fermentation (Mean)", "after fermentation"))
 
 # Adjust SD range
 data_long <- data_long %>% mutate(ymin = pmax(Concentration - SD, 0), ymax = Concentration + SD)
@@ -439,6 +465,7 @@ plot <- ggplot(data_long, aes(x = Sugar, y = Concentration, fill = Group)) +
 
 # Print plot
 print(plot)
+
 ```
 
 # Figure alcohol tolerance 
