@@ -1,4 +1,4 @@
-##
+## Genome analysis with Blast
 Here we show how we used blast to search for orthologous genes (Table 2) in the genome of Prototheca ciferrii 
 ```
 #conda activate EDTA
