@@ -2,7 +2,7 @@
 #conda activate EDTA
 
 #prepare db
-#makeblastdb -in GCA_003613005.1_ASM361300v1_genomic.fna -dbtype nucl -out prototheca_db
+´´´makeblastdb -in GCA_003613005.1_ASM361300v1_genomic.fna -dbtype nucl -out prototheca_db
 
 #perform blast
 run-blast (){
@@ -18,7 +18,7 @@ run-blast (){
 }
 
 run-blast GCA_003613005.1_ASM361300v1_genomic.fna
-blastn -query genes_of_interest2.fasta -db prototheca_db -out results.out -outfmt 6 -num_threads 32
+blastn -query genes_of_interest2.fasta -db prototheca_db -out results.out -outfmt 6 -num_threads 32´´´
 
 #Look into GFF
 #grep -i "alcohol dehydrogenase" genome.gff
