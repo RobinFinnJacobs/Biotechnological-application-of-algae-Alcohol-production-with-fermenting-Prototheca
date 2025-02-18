@@ -1,6 +1,7 @@
-#  Here we show all the codes that were used to create the Figures of the results of the fermentation experiment 
+#  Figures 
+Here we show all the codes that were used to create the Figures of the results of the fermentation experiment 
 
-## Figure Vol% of all approaches (calculated by °P) with ribbons
+## 01 Figure Vol% of all approaches (calculated by °P) with ribbons
 ```r
 # Load nessecary Packages
 library(ggplot2)
@@ -72,8 +73,8 @@ plot_vol <- ggplot(data, aes(x = Tag, y = Vol_mean, color = Ansatz, fill = Ansat
 # Display plot
 print(plot_vol)
 ```
-## Figure pH all approaches with Ribbons
-
+## 02 Figure pH all approaches with Ribbons
+```r
 #Load nessecary Packages 
 library(ggplot2)
 library(dplyr)
@@ -145,9 +146,9 @@ plot_pH_ribbon <- ggplot(data, aes(x = Tag, y = pH_mean, color = Ansatz, fill = 
 
 # Display plot
 print(plot_pH_ribbon)
-
-## Plot all approaches individually pH, Vol%(°P), Vol%(enz.)
-
+```
+## 03 Plot all approaches individually pH, Vol%(°P), Vol%(enz.)
+```r
 #Load nessecary Packages
 library(ggplot2)
 library(dplyr)
@@ -252,9 +253,9 @@ ph_vol_plots <- lapply(ansaetze, plot_ph_vol)
 
 # Show plot
 print (grid.arrange(grobs = ph_vol_plots, ncol = 2, top = textGrob("pH and Vol% over Time per Approach", gp=gpar(fontsize=27, fontface="bold")))
-
-## Plot of the cell concentration of both approaches
-
+```
+## 04 Plot of the cell concentration of both approaches
+```r
 # Load data
    
 file_path3 <- "~/Desktop/Zellkonzentrationsbestimmung.csv"
@@ -293,11 +294,12 @@ Plot_zellkonz_ribbon <- ggplot(summary_data, aes(x = Tag, y = Mittelwert,
 # Print Plot
 print(Plot_zellkonz_ribbon)
 View(plot)
+```
+# Figures enzymatic tests/CO2
+Here we show all the codes that were used to create the images of the results of the enzymatic tests and CO2 experiment 
 
-### Illustrations enzymatic tests/CO2
-
-## Figure Final alcohol content determined enzymatically
-
+## 01 Figure final alcohol content determined enzymatically
+```r
 # Load libraries
 library(ggplot2)
 library(dplyr)
@@ -339,9 +341,9 @@ Plot_Endalk <- ggplot(data, aes(x = Ethanol_mean, y = Ansatz, fill = Ansatz)) +
   scale_fill_manual(values = ansatz_colors)
 
 print(Plot_Endalk)
-
-## Plot CO2 concentration
-
+```
+## 02 Plot CO2 concentration
+```r
 # Load library
 library(ggplot2)
 
@@ -381,10 +383,10 @@ plot <- ggplot(data, aes(x = factor(group), y = CO2_g_L, fill = factor(Approach)
 
 # Print plot
 print(plot)
+```
 
-
-## Plot Sugar concentration with standard deviation
-
+## 03 Plot Sugar concentration with standard deviation
+```r
 # Load libraries
 library(ggplot2); library(dplyr); library(tidyr)
 
@@ -434,10 +436,12 @@ plot <- ggplot(data_long, aes(x = Sugar, y = Concentration, fill = Group)) +
 
 # Print plot
 print(plot)
+```
 
-
-### Illustration alcohol tolerance 
-
+# Figure alcohol tolerance 
+Here we show the code used to create the Figure of the alcoholtolerance experiment 
+## 01 alcohol tolerance 
+```r
 # Load libraries
 library(ggplot2); library(dplyr)
 
@@ -496,3 +500,4 @@ plot_alcohol_tolerance <- ggplot(data_summary, aes(
 
 # Print plot
 print(plot_alcohol_tolerance)
+```
