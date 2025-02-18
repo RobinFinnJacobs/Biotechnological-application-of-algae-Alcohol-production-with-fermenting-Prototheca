@@ -252,7 +252,7 @@ ansaetze <- unique(data$Ansatz)
 ph_vol_plots <- lapply(ansaetze, plot_ph_vol)
 
 # Show plot
-print (grid.arrange(grobs = ph_vol_plots, ncol = 2, top = textGrob("pH and Vol% over Time per Approach", gp=gpar(fontsize=27, fontface="bold")))
+grid.arrange(grobs = ph_vol_plots, ncol = 2, top = textGrob("pH and Vol% over Time per Approach", gp=gpar(fontsize=27, fontface="bold")))
 ```
 ## 04 Plot of the cell concentration of both approaches
 ```r
