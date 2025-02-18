@@ -267,8 +267,11 @@ filtered_data <- data_Zellkonz %>% filter(Ansatz %in% c(14, 9))
    
 #Group the data by day and approach and calculate the mean and SD
     
-summary_data <- filtered_data %>% group_by(Tag, Ansatz) %>%
-+summarise(Mittelwert = mean(Zellkonz, na.rm = TRUE),SD = sd(Zellkonz, na.rm = TRUE),.groups = "drop")
+summary_data <- filtered_data %>%
+  group_by(Tag, Ansatz) %>%
+  summarise(Mittelwert = mean(Zellkonz, na.rm = TRUE), 
+            SD = sd(Zellkonz, na.rm = TRUE), 
+            .groups = "drop")
 
 # Create Plot 
 Plot_zellkonz_ribbon <- ggplot(summary_data, aes(x = Tag, y = Mittelwert, 
